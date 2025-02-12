@@ -1,0 +1,5 @@
+@import "tailwindcss";
+@import url('https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css');
+body {
+    background-color: #0C0C0C;
+}
