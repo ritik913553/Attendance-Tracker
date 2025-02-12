@@ -7,19 +7,26 @@ function Account_Deatils() {
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [step, setStep] = useState(1);
-    const [phone, setPhone] = useState(""); 
+    const [showOTP, setShowOTP] = useState(false); // Track OTP div visibility
+    const [phone, setphone] = useState(""); 
     const [otp, setOtp] = useState(["", "", "", ""]); // Track OTP input
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+      
 
     const handlePhoneChange = (e) => {
-        setPhone(e.target.value);
+      const value = e.target.value.replace(/\D/g, ""); // Allow only numbers
+    if (value.length <= 10) {
+      setphone(value);
+    }
+    if (value.length === 10) {
+      setShowOTP(true);
+    }
     };
     const handleOtpChange = (e, index) => {
         const newOtp = [...otp];
         newOtp[index] = e.target.value;
-    
         setOtp(newOtp);
     
         // Automatically focus next input when current input is filled
@@ -118,7 +125,7 @@ function Account_Deatils() {
           )}
 
           {/* OTP Verification */}
-          {step === 2 && (
+          {(step === 2 && showOTP) && (
             <div>
               <label className="block mb-2 text-lg"></label>
               <div
@@ -139,7 +146,12 @@ function Account_Deatils() {
                     <span id="otp-mobile-number" className="text-white">
                       {phone}
                     </span>
-                    <i className="ri-pencil-line text-white underline cursor-pointer">
+                    <i className="ri-pencil-line text-white underline cursor-pointer"
+                    onClick={()=>{
+                      setShowOTP(false);
+                      setStep(1);
+                    }}
+                    >
                       <span className="ml-[1px]">Edit</span>
                     </i>
                   </label>
