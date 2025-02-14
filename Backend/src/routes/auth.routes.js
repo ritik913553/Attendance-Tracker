@@ -1,0 +1,23 @@
+import { Router } from "express";
+
+import passport from "../middlewares/passport.middleware.js";
+import {
+  googleCallback,
+  googleLoginFailed,
+} from "../controllers/auth.controllers.js";
+const router = Router();
+
+router
+  .route("/login-with-google")
+  .get(passport.authenticate("google", { scope: ["profile", "email"] }));
+router.route("/login-with-google/callback").get(
+  passport.authenticate("google", {
+    failureRedirect: "/api/v1/auth/login-with-google/failed",
+  }),
+  googleCallback
+);
+
+
+router.route("/login-with-google/failed").get(googleLoginFailed);
+
+export default router;
