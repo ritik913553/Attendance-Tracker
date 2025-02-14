@@ -4,7 +4,9 @@ import passport from "../middlewares/passport.middleware.js";
 import {
   googleCallback,
   googleLoginFailed,
+  getUser
 } from "../controllers/auth.controllers.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 
 router
@@ -19,5 +21,7 @@ router.route("/login-with-google/callback").get(
 
 
 router.route("/login-with-google/failed").get(googleLoginFailed);
+
+router.route('/me').get(verifyJWT,getUser)
 
 export default router;

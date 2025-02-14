@@ -1,7 +1,7 @@
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import {generateAccessAndRefreshTokens} from '../controllers/user.controler.js'
+import { generateAccessAndRefreshTokens } from "../controllers/user.controler.js";
 
 const loginWithGoogle = async (userData, cb) => {
   // TODO :find or create user in database also generate token and sent
@@ -13,12 +13,14 @@ const loginWithGoogle = async (userData, cb) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
+      existingUser.isVerified = true;
       if (!existingUser.authMethod || existingUser.authId !== sub) {
         existingUser.authMethod = provider;
         existingUser.authId = sub;
-        return cb(null,existingUser)
+        await existingUser.save();
+        return cb(null, existingUser);
       }
-
+      await existingUser.save();
       return cb(null, existingUser);
     } else {
       const newUser = await User.create({
@@ -27,10 +29,9 @@ const loginWithGoogle = async (userData, cb) => {
         profilePic: picture,
         authMethod: provider,
         authId: sub,
-        isVerified:true
+        isVerified: true,
       });
-      cb(null,newUser)
-      
+      cb(null, newUser);
     }
   } catch (error) {
     console.error("Error in loginWithGoogle:", error);
@@ -44,8 +45,6 @@ const googleCallback = asyncHandler(async (req, res, next) => {
       return res.status(401).json(new ApiResponse(401, "Unauthorized", null));
     }
     const user = req.user;
-
-    
 
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
       user._id
@@ -64,31 +63,19 @@ const googleCallback = asyncHandler(async (req, res, next) => {
         console.error("Error logging out the session:", err);
         return res
           .status(500)
-          .json(new ApiResponse(500, null, "Internal Server Error"));
+          .json(new ApiResponse(500, "Internal Server Error",null));
       }
       res
-        .status(200)
         .cookie("accessToken", accessToken, options)
         .cookie("refreshToken", refreshToken, options)
-        .json(
-          new ApiResponse(
-            200,
-            {
-              user: loggedInUser,
-              accessToken,
-              refreshToken,
-            },
-            "User login successfully"
-          )
-        );
+        
+        res.redirect("http://localhost:3000")
     });
   } catch (error) {
     console.error("Error in Google Callback:", error);
-    res.status(500).json(new ApiResponse(500, null, "Internal Server Error"));
+    res.status(500).json(new ApiResponse(500, "Internal Server Error", null));
   }
 });
-
-
 
 const googleLoginFailed = (req, res) => {
   // TODO: handle login failed scenario
@@ -97,8 +84,12 @@ const googleLoginFailed = (req, res) => {
     .json(new ApiResponse(400, null, "user authentication failed"));
 };
 
-export {
-  loginWithGoogle,
-  googleCallback,
-  googleLoginFailed
-};
+const getUser = asyncHandler(async (req, res) => {
+  const user = req.user;
+  if (!user) {
+    return res.status(401).json(new ApiResponse(401, "Unauthorized", null));
+  }
+  res.json(new ApiResponse(200, "User retrieved successfully", user));
+});
+
+export { loginWithGoogle, googleCallback, googleLoginFailed, getUser };
