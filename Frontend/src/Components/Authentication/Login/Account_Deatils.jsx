@@ -49,11 +49,12 @@ function AccountDetails() {
 
   return (
     <div className="w-full h-full flex flex-col sm:items-center px-3 sm:px-0 text-white">
-      <div className="w-full flex flex-col sm:items-center mt-20 sm:mt-1">
-        <h1 className="text-4xl font-semibold mb-1 text-white sm:mr-[320px]">
+      <div className=" sm:w-[45%]">
+      <div className="w-full flex flex-col mt-20 sm:mt-10  sm:px-4 px-2">
+        <h1 className="text-4xl font-semibold mb-1 text-white ">
           Sign Up
         </h1>
-        <div className="flex items-center text-zinc-400 sm:mr-[241px]">
+        <div className="flex items-center text-zinc-400 ">
           <p className="text-sm">Already have an account?</p>
           <Link
             onClick={() => navigate(-1)}
@@ -73,7 +74,7 @@ function AccountDetails() {
             <form onSubmit={handleSubmit(onSubmit)}>
               {/* Name */}
               <div className="flex flex-col mb-3">
-                <label className="text-gray-300 text-sm">Full Name *</label>
+                <label className="text-gray-300 text-sm mb-1">Full Name *</label>
                 <input
                   {...register("name", { required: "Name is required" })}
                   placeholder="Enter Your Full Name"
@@ -132,7 +133,7 @@ function AccountDetails() {
           </div>
 
         {/* Google Sign In */}
-        <button onClick={googleLogin} className="inline-block w-full cursor-pointer">
+        <button onClick={googleLogin} className="inline-block w-full cursor-pointer mt-5">
           <div
             href=""
             className="btn  strategy flex items-center justify-center gap-5 text-lg border-[1px] border-zinc-400 w-full py-2 rounded-full "
@@ -145,6 +146,9 @@ function AccountDetails() {
           </div>
         </button>
       </div>
+      </div>
+      
+
     </div>
   );
 }
