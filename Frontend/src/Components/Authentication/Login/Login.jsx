@@ -35,10 +35,10 @@ function Login() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center sm:justify-center sm:py-2">
-      <section className="view sm:w-[45%] w-full rounded-lg flex items-center justify-center p-4 sm:px-3 sm:mt-8 mt-10 sm:mb-0 mb-2">
+    <div className="w-full flex flex-col items-center sm:justify-center">
+      <section className="view w-full rounded-lg flex items-center justify-center p-4 sm:px-3 sm:mt-5 mt-2 sm:mb-0 mb-2 ">
         
-        <div className="form sm:w-[500px] md:w-[600px] sm:h-[80%] w-[98%] rounded-lg">
+        <div className="form sm:w-[500px] md:w-[500px] sm:h-[80%] w-[98%] rounded-lg ">
           <div className="top text-white font-semibold text-xl w-fit ">
             <h1 className="w-fit  font-semibold text-4xl mb-8 sm:mb-5">
               Sign In
@@ -47,13 +47,13 @@ function Login() {
 
           <form
             onSubmit={handleSubmit(handleLogin)}
-            className="space-y-3 sm:space-y-4 rounded-lg px-5 py-2"
+            className="space-y-3 sm:space-y-4 rounded-lg px-5 py-2 "
             style={{
               boxShadow: '0 1px 1px rgba(255, 255, 255, 0.3), 0 1px 3px rgba(255, 255, 255, 0.3)',
             }}
           >
             {/* Email Input */}
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               <label className="text-gray-300 text-sm">Email address</label>
               <div className="relative flex items-center mt-1">
                 <input
@@ -73,7 +73,7 @@ function Login() {
             </div>
 
             {/* Password Input */}
-            <div className="space-y-2">
+            <div className="space-y-2 ">
               <label className="text-gray-300 text-sm">Password</label>
               <div className="relative flex items-center mt-1">
                 <input
@@ -100,15 +100,20 @@ function Login() {
                   {errors.password.message}
                 </p>
               )}
+              <Link to='/reset-password' className="w-fit text-xs text-blue-600 cursor-pointer">Forget Password</Link>
             </div>
+            
 
             {/* Button */}
-            <button
-              type="submit"
-              className="px-5 py-1 bg-[#5c4cf0] hover:bg-[#6c72c5] font-semibold rounded-full text-center ml-[70%] sm:ml-[80%] cursor-pointer"
-            >
-              Continue
-            </button>
+            <div className="  flex items-center justify-end">
+              <button
+                type="submit"
+                className="px-5 py-1 bg-[#5c4cf0] hover:bg-[#6c72c5] font-semibold rounded-full text-center  cursor-pointer w-fit"
+              >
+                Continue
+              </button>
+            </div>
+
           </form>
 
           <div className="divider text-white flex items-center justify-center mt-5 sm:mt-5">
