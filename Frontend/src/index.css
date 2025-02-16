@@ -6,13 +6,13 @@ body {
 }
 
 @font-face {
-    font-family: 'Moranga';
+    font-family: 'Moranga'; 
     src: url('./assets/moranga.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }
   
-  * {
-    font-family: 'Moranga', sans-serif;
+  /* * {
+    font-family: 'Moranga', 'sans-serif'
   }
-  
+   */

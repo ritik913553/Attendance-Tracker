@@ -196,3 +196,92 @@ export const Welcome_Email_Template = `<!DOCTYPE html>
 </html>
 
 `;
+
+
+export const Reset_Password_OTP_Email_Template = `<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device=device-width, initial-scale=1.0">
+    <title>Reset Your Password</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .email-header {
+            background: #d32f2f;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+
+        .email-body {
+            padding: 20px;
+            line-height: 1.6;
+            text-align: center;
+        }
+
+        .email-body p {
+            margin: 10px 0;
+        }
+
+        .otp-code {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d32f2f;
+            background: #f8d7da;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        .email-footer {
+            background: #f9f9f9;
+            padding: 15px;
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            Reset Your Password
+        </div>
+        <div class="email-body">
+            <p>Hi {user_name},</p>
+            <p>You have requested to reset your password. Use the OTP below to proceed:</p>
+            
+            <div class="otp-code">{OTP_CODE}</div>
+            
+            <p>This OTP is valid for only 10 minutes. Do not share it with anyone.</p>
+            <p>If you did not request a password reset, please ignore this email or contact our support team.</p>
+            <p>Thanks,<br>The Attendance Tracker App Team</p>
+        </div>
+        <div class="email-footer">
+            <p>&copy; 2025 Attendance Tracker App. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+
+</html>
+`;

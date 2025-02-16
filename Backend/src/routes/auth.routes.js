@@ -4,7 +4,9 @@ import passport from "../middlewares/passport.middleware.js";
 import {
   googleCallback,
   googleLoginFailed,
-  getUser
+  getUser,
+  otpForResetPassword,
+  resetPassword,
 } from "../controllers/auth.controllers.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
@@ -19,9 +21,11 @@ router.route("/login-with-google/callback").get(
   googleCallback
 );
 
-
 router.route("/login-with-google/failed").get(googleLoginFailed);
 
-router.route('/me').get(verifyJWT,getUser)
+router.route("/me").get(verifyJWT, getUser);
+
+router.route("/reset-password").post(resetPassword);
+router.route("/request-otp").post(otpForResetPassword);
 
 export default router;

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FiEye, FiEyeOff } from "react-icons/fi";
-import { FaTumblr } from "react-icons/fa";
 import { FiUserPlus } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast'
 
 import AnimatedBackground from "../../AnimatedBackground";
 function Login() {
@@ -24,7 +24,7 @@ function Login() {
       const success = await login(data);
       if (success) {
         toast.success("Logged in successfully!", { duration: 2000 });
-        navigate("/dashboard");
+        navigate("/");
       } else {
         toast.error("Invalid credentials", { duration: 2000 });
       }
@@ -63,9 +63,9 @@ function Login() {
                   className="w-full bg-[#1E1E1E] text-white px-4 py-2 rounded-md outline-none border border-transparent focus:border-gray-500"
                 />
 
-                <span className="absolute right-4 text-gray-400">
+                {/* <span className="absolute right-4 text-gray-400">
                   <FaTumblr className="text-gray-400" size={20} />
-                </span>
+                </span> */}
               </div>
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -131,7 +131,7 @@ function Login() {
               </button>
               {/* Use Link instead of <a> */}
               <Link
-                to="/newuser"
+                to="/signup"
                 className="create flex items-center justify-center mt-4 w-full p-2 rounded-full border-[1px] border-zinc-400 gap-5 text-lg"
               >
                 <span className="text-2xl">

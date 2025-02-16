@@ -2,6 +2,8 @@ import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateAccessAndRefreshTokens } from "../controllers/user.controler.js";
+import { ApiError } from "../utils/ApiError.js";
+import { generateOTP } from "../utils/generateOTP.js";
 
 const loginWithGoogle = async (userData, cb) => {
   // TODO :find or create user in database also generate token and sent
@@ -63,13 +65,13 @@ const googleCallback = asyncHandler(async (req, res, next) => {
         console.error("Error logging out the session:", err);
         return res
           .status(500)
-          .json(new ApiResponse(500, "Internal Server Error",null));
+          .json(new ApiResponse(500, "Internal Server Error", null));
       }
       res
         .cookie("accessToken", accessToken, options)
-        .cookie("refreshToken", refreshToken, options)
-        
-        res.redirect("http://localhost:3000")
+        .cookie("refreshToken", refreshToken, options);
+
+      res.redirect("http://localhost:3000");
     });
   } catch (error) {
     console.error("Error in Google Callback:", error);
@@ -89,7 +91,67 @@ const getUser = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(401).json(new ApiResponse(401, "Unauthorized", null));
   }
-  res.json(new ApiResponse(200, "User retrieved successfully", user));
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, "User fetched successfully", { loggedInUser: user })
+    );
 });
 
-export { loginWithGoogle, googleCallback, googleLoginFailed, getUser };
+const otpForResetPassword = asyncHandler(async (req, res) => {
+  // TODO: handle otp request
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  if (user.authMethod === "google") {
+    throw new ApiError(
+      400,
+      "Your account is linked with Google. Please reset your password through Google."
+    );
+  }
+  const otp = generateOTP();
+  user.resetPasswordOtp = otp;
+  await user.save();
+
+  const htmlContent = Reset_Password_OTP_Email_Template.replace(
+    "{user_name}",
+    user.fullName
+  ).replace("{OTP_CODE}", otp);
+
+  await sendEmail(email, "Reset Password OTP", htmlContent);
+  return res.status(200).json(new ApiResponse(200, "OTP sent successfully"));
+});
+
+const resetPassword = asyncHandler(async () => {
+  // TODO: handle password reset
+  const { email, newPassword, otp } = req.body;
+  if (
+    [email, otp, newPassword].some((field) => !field || field.trim() === "")
+  ) {
+    throw new ApiError(400, "All fields are required");
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+  if (user.resetPasswordOtp !== otp) {
+    throw new ApiError(401, "Invalid OTP");
+  }
+  user.password = newPassword;
+  await user.save();
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Password reset successfully"));
+});
+
+export {
+  loginWithGoogle,
+  googleCallback,
+  googleLoginFailed,
+  getUser,
+  otpForResetPassword,
+  resetPassword,
+};

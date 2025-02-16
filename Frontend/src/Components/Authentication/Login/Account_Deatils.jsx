@@ -25,7 +25,7 @@ function AccountDetails() {
       const response = await  API.post('/users/signup',data);
       if(response.status === 201){
         toast.success("User registered successfully!Please verify your email",{duration:4000,})
-        navigate('/')
+        navigate('/login')
       }
       console.log(response);
     } catch (error) {
@@ -36,17 +36,7 @@ function AccountDetails() {
     reset();
   };
 
-  const loginWithGoogleHandler = async (e)=>{
-      e.preventDefault();
-      try {
-        window.location.href = "http://localhost:8000/api/v1/auth/login-with-google"; 
-        const urlParams = new URLSearchParams(window.location.search);
-        console.log(urlParams)
-      } catch (error) {
-        console.log(error)
-      }
-  }
-
+ 
   return (
     <div className="w-full h-full flex flex-col sm:items-center px-3 sm:px-0 text-white">
       <div className=" sm:w-[45%]">
@@ -76,7 +66,7 @@ function AccountDetails() {
               <div className="flex flex-col mb-3">
                 <label className="text-gray-300 text-sm mb-1">Full Name *</label>
                 <input
-                  {...register("name", { required: "Name is required" })}
+                  {...register("fullName", { required: "Name is required" })}
                   placeholder="Enter Your Full Name"
                   className="w-full bg-[#1E1E1E] text-white px-4 py-1 rounded-md outline-none border border-transparent focus:border-gray-500"
                 />
