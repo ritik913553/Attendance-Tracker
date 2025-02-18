@@ -12,7 +12,7 @@ const Dashboard = () => {
         <p className="">Welcome {user?.fullName}</p>
         <button onClick={logout} className="px-3 py-1 border-1 cursor-pointer"> Logout </button>
       </div>
-      <img className="h-32 w-32 bg-red-400" src={user?.profilePic} alt="" />
+      <img className="h-32 w-32 " src={user.profilePic} alt="Profile" />
     </div>
   );
 };

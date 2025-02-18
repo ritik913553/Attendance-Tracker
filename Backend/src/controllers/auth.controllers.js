@@ -4,6 +4,8 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { generateAccessAndRefreshTokens } from "../controllers/user.controler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { generateOTP } from "../utils/generateOTP.js";
+import {Reset_Password_OTP_Email_Template} from '../utils/EmailTemplate.js'
+import { sendEmail } from "../utils/EmailSender.js";
 
 const loginWithGoogle = async (userData, cb) => {
   // TODO :find or create user in database also generate token and sent
@@ -125,7 +127,7 @@ const otpForResetPassword = asyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, "OTP sent successfully"));
 });
 
-const resetPassword = asyncHandler(async () => {
+const resetPassword = asyncHandler(async (req,res) => {
   // TODO: handle password reset
   const { email, newPassword, otp } = req.body;
   if (
@@ -133,15 +135,20 @@ const resetPassword = asyncHandler(async () => {
   ) {
     throw new ApiError(400, "All fields are required");
   }
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select('+resetPasswordOtp');
   if (!user) {
     throw new ApiError(404, "User not found");
   }
+  console.log(otp);
+    console.log(user.resetPasswordOtp);
+  
   if (user.resetPasswordOtp !== otp) {
     throw new ApiError(401, "Invalid OTP");
   }
   user.password = newPassword;
+  user.resetPasswordOtp = null;
   await user.save();
+
   return res
     .status(200)
     .json(new ApiResponse(200, "Password reset successfully"));
